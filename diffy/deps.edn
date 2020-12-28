@@ -1,0 +1,9 @@
+{:deps    {com.cognitect/test-runner        {:git/url "https://github.com/cognitect-labs/test-runner.git"
+                                             :sha     "209b64504cb3bd3b99ecfec7937b358a879f55c1"}
+           net.mikera/core.matrix           {:mvn/version "0.62.0"}
+           net.mikera/vectorz-clj           {:mvn/version "0.48.0"}
+           uncomplicate/neanderthal         {:mvn/version "0.39.0"}
+           uncomplicate/fluokitten          {:mvn/version "0.9.1"}
+           org.bytedeco/mkl-platform-redist {:mvn/version "2020.3-1.5.4"}}
+ :aliases {:test {:extra-paths ["test"]
+                  :main-opts   ["-m" "cognitect.test-runner"]}}}
