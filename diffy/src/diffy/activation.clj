@@ -12,4 +12,4 @@
 (def relu
   (l/activation-layer
    (partial emap #(if (> % 0.0) % 0.0))
-   (partial emap (fn [i o e] (if (> i 0.0) e 0.0)))))
+   (partial emap (fn [i _o e] (if (> i 0.0) e 0.0)))))
