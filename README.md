@@ -8,7 +8,3 @@ Neural Network
     * native Clojure vectors
     * clojure.core.matrix
     * uncomplicate.neanderthal.native
-    
-## Tests
-
-    $ clj -Atest

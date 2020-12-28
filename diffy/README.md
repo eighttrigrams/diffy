@@ -1,0 +1,5 @@
+# Diffy
+
+## Tests
+
+    $ clj -Atest
