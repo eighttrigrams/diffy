@@ -3,7 +3,11 @@
     [runner :as runner]
     [physics :refer :all]))
 
-(defn init []
+(def MAX-ANGLE 0.25)
+
+(def SHIP-SPEED 10)
+
+(defn spawn []
   (create-body:rectangle [0 0 4 200] :rod)
   (translate-bodies [:rod] 200 -150)
 
@@ -25,22 +29,35 @@
 
   (create-joint:prismatic :prismatic :rail :ship [-50.0 0.0] [50.0 0.0])
   (translate-bodies [:rail] 200 -304)
-  (translate-bodies [:ship :constraint-left :constraint-right] 200 -304)
-  {})
+  (translate-bodies [:ship :constraint-left :constraint-right] 200 -304))
 
-(def speed 10)
+(defn reset []
+  (remove-bodies-and-joints)
+  (spawn))
 
-(defn on-tick-observer [notify-subscriber]
-  (fn on-tick [state keys-pressed tick-in-ms]
-    (cond
-      (.contains keys-pressed \a)
-      (set-motor-speed :prismatic speed)
-      (.contains keys-pressed \d)
-      (set-motor-speed :prismatic (- speed))
-      :else (set-motor-speed :prismatic 0))
-    (-> state
-        (assoc :rotation (get-rotation :rod))
-        (notify-subscriber))))
+(defn init [] (spawn) {})
 
-(defn go [on-tick-subscriber]
-  (runner/run (init) (on-tick-observer on-tick-subscriber)))
+(defn on-tick-observable [notify]
+  (fn on-tick [{cmd :cmd :as state} keys-pressed tick-in-ms]
+    (if
+      (= :reset cmd)
+      (do (reset)
+        (-> state
+            (assoc :cmd nil)
+            (assoc :done false)
+            (notify)))
+      (do
+        (cond
+          (.contains keys-pressed \a)
+          (set-motor-speed :prismatic SHIP-SPEED)
+          (.contains keys-pressed \d)
+          (set-motor-speed :prismatic (- SHIP-SPEED))
+          :else (set-motor-speed :prismatic 0))
+        (let [state (assoc state :rotation (get-rotation :rod))]
+          (-> state
+              (cond-> (or (> (:rotation state) MAX-ANGLE)
+                          (< (:rotation state) (- MAX-ANGLE))) (assoc :done true))
+              (notify)))))))
+
+(defn go [on-tick-observer]
+  (runner/run (init) (on-tick-observable on-tick-observer)))

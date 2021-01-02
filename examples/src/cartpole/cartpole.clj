@@ -1,11 +1,12 @@
 (ns cartpole.cartpole
   (:require [cartpole :as cp]))
 
-(defn on-tick [state]
-
-  (prn state)
-
-  state)
+(defn on-tick [{done :done :as state}]
+  (if done
+    (do
+      (Thread/sleep 1000)
+      (assoc state :cmd :reset))
+    state))
 
 (defn -main [& args]
   (cp/go on-tick))

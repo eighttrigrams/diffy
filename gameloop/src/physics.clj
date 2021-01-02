@@ -45,7 +45,8 @@
        '()
        (eduction xf bodies)))))
 
-(defn step-in-ms [tick-in-ms] (.step world tick-in-ms))
+(defn step-in-ms [tick-in-ms]
+  (.step world tick-in-ms))
 
 ;; https://github.com/dyn4j/dyn4j/blob/master/src/main/java/org/dyn4j/dynamics/joint/RevoluteJoint.java
 (defn create-joint:revolute [id body1-id body2-id [x y]]
@@ -82,6 +83,12 @@
     (.addJoint world joint)
 
     (swap! joints assoc id joint)))
+
+(defn remove-bodies-and-joints []
+  (mapv #(.removeJoint world %) (vals @joints))
+  (reset! joints {})
+  (mapv #(.removeBody world %) (vals @bodies))
+  (reset! bodies {}))
 
 (defn get-rotation [id]
   (.getRotationAngle (.getTransform (id @bodies))))
