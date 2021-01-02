@@ -62,7 +62,6 @@
                           (Vector2. x y))]
     (.setCollisionAllowed joint false)
     (.addJoint world joint)
-
     (swap! joints assoc id joint)))
 
 (defn create-joint:prismatic [id body1-id body2-id [x1 y1] [x2 y2]]
