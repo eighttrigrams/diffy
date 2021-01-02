@@ -8,3 +8,8 @@ Neural Network
     * native Clojure vectors
     * clojure.core.matrix
     * uncomplicate.neanderthal.native
+
+Examples using Diffy
+
+* Mnist
+* CartPole, written in Clojure; TODO solve using Diffy
