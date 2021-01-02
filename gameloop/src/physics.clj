@@ -50,9 +50,9 @@
 
 ;; https://github.com/dyn4j/dyn4j/blob/master/src/main/java/org/dyn4j/dynamics/joint/RevoluteJoint.java
 (defn create-joint:revolute [id body1-id body2-id [x y]]
-  (let [body1 (:body (first (get-engine-bodies [body1-id])))
-        body2 (:body (first (get-engine-bodies [body2-id])))
-        joint (RevoluteJoint. body1 body2 (Vector2. x y))]
+  (let [joint (RevoluteJoint. (body1-id @bodies)
+                              (body2-id @bodies)
+                              (Vector2. x y))]
     (.setReferenceAngle joint 0.0)
     (.setLimitEnabled joint true)
     (.setLowerLimit joint -1.5)
@@ -65,23 +65,23 @@
     (swap! joints assoc id joint)))
 
 (defn create-joint:weld [id body1-id body2-id [x y]]
-  (let [body1 (:body (first (get-engine-bodies [body1-id])))
-        body2 (:body (first (get-engine-bodies [body2-id])))
-        joint (WeldJoint. body1 body2 (Vector2. x y))]
+  (let [joint (WeldJoint. (body1-id @bodies)
+                          (body2-id @bodies)
+                          (Vector2. x y))]
     (.setCollisionAllowed joint false)
     (.addJoint world joint)
 
     (swap! joints assoc id joint)))
 
 (defn create-joint:prismatic [id body1-id body2-id [x1 y1] [x2 y2]]
-  (let [body1 (:body (first (get-engine-bodies [body1-id]))) ;; TODO fetch from bodies
-        body2 (:body (first (get-engine-bodies [body2-id])))
-        joint (PrismaticJoint. body1 body2 (Vector2. x1 y1) (Vector2. x2 y2))]
+  (let [joint (PrismaticJoint. (body1-id @bodies)
+                               (body2-id @bodies)
+                               (Vector2. x1 y1)
+                               (Vector2. x2 y2))]
     (.setCollisionAllowed joint false)
     (.setMotorEnabled joint true)
     (.setMaximumMotorForce joint 12000.0)
     (.addJoint world joint)
-
     (swap! joints assoc id joint)))
 
 (defn remove-bodies-and-joints []
