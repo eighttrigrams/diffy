@@ -55,10 +55,8 @@
     (.setLowerLimit joint -1.5)
     (.setUpperLimit joint 0.1)
     (.addJoint world joint)
-    (.setMaximumMotorTorque joint 200.0)
     (.setMotorEnabled joint true)
     (.setMotorSpeed joint 0.05)
-
     (swap! joints assoc id joint)))
 
 (defn create-joint:weld [id body1-id body2-id [x y]]
@@ -92,6 +90,9 @@
 
 (defn set-motor-speed [joint-id speed]
   (.setMotorSpeed (joint-id @joints) speed))
+
+(defn set-maximum-motor-torque [joint-id max-torque]
+  (.setMaximumMotorTorque (joint-id @joints) max-torque))
 
 (defn translate-bodies [ids x y]
   (mapv #(.translate (% @bodies) x y) ids))
