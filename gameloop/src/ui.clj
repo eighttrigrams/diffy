@@ -38,7 +38,6 @@
     (.start frame-timer)
     (.start physics-timer)))
 
-
 (defn- init-buffered-image
   [size]
   (let [ge (GraphicsEnvironment/getLocalGraphicsEnvironment)
