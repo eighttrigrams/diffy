@@ -83,6 +83,9 @@
 (defn get-rotation [id]
   (.getRotationAngle (.getTransform (id @bodies))))
 
+(defn get-linear-velocity [id]
+  (.x (.getLinearVelocity (id @bodies))))
+
 (defn set-motor-speed [joint-id speed]
   (.setMotorSpeed (joint-id @joints) speed))
 

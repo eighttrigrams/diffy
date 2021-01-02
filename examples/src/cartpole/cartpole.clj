@@ -2,6 +2,7 @@
   (:require [cartpole :as cp]))
 
 (defn on-tick [{done :done :as state}]
+  (prn state)
   (if done
     (do
       (Thread/sleep 1000)

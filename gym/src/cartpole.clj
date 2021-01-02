@@ -55,7 +55,9 @@
           (.contains keys-pressed \d)
           (set-motor-speed :prismatic (- SHIP-SPEED))
           :else (set-motor-speed :prismatic 0))
-        (let [state (assoc state :rotation (get-rotation :rod))]
+        (let [state (-> state
+                        (assoc :rotation (get-rotation :rod))
+                        (assoc :velocity (get-linear-velocity :tip)))]
           (-> state
               (cond-> (or (> (:rotation state) MAX-ANGLE)
                           (< (:rotation state) (- MAX-ANGLE))) (assoc :done true))
