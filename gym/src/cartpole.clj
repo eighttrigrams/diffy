@@ -8,31 +8,31 @@
 (def SHIP-SPEED 10)
 
 (defn spawn []
-  (create-body:rectangle [0 104 4 4] :tip)
-  (create-body:rectangle [0 0 4 200] :rod)
+  (create-body:rectangle [[0 104] [4 4]] :tip)
+  (create-body:rectangle [[0 0] [4 200]] :rod)
   (create-joint:weld :tip-rod :rod :tip [0.0 102.0])
-  (translate-bodies [:rod :tip] 200 -194)
+  (translate-bodies [:rod :tip] [200 -194])
   (set-linear-velocity :tip [30.0 0.0])
 
-  (create-body:rectangle [-150.0 -50 25 100] :pillar-left :infinite)
-  (create-body:rectangle [150.0 -50 25 100] :pillar-right :infinite)
-  (create-body:rectangle [-156.25 5 12.5 10] :pillar-leftmost :infinite)
-  (create-body:rectangle [156.50 5 12.5 10] :pillar-rightmost :infinite)
+  (create-body:rectangle [[-150.0 -50] [25 100]] :pillar-left :infinite)
+  (create-body:rectangle [[150.0 -50] [25 100]] :pillar-right :infinite)
+  (create-body:rectangle [[-156.25 5] [12.5 10]] :pillar-leftmost :infinite)
+  (create-body:rectangle [[156.50 5] [12.5 10]] :pillar-rightmost :infinite)
   (translate-bodies
-   [:pillar-leftmost :pillar-left :pillar-right :pillar-rightmost] 200 -300)
+   [:pillar-leftmost :pillar-left :pillar-right :pillar-rightmost] [200 -300])
 
-  (create-body:rectangle [0 0 300 2.0] :rail)
+  (create-body:rectangle [[0 0] [300 2.0]] :rail)
 
-  (create-body:rectangle [0 0 30 10] :ship)
-  (create-body:rectangle [-10 10 10 8] :constraint-left)
-  (create-body:rectangle [10 10 10 8] :constraint-right)
+  (create-body:rectangle [[0 0] [30 10]] :ship)
+  (create-body:rectangle [[-10 10] [10 8]] :constraint-left)
+  (create-body:rectangle [[10 10] [10 8]] :constraint-right)
 
   (create-joint:weld :weld1 :ship :constraint-left [-10.0 10.0])
   (create-joint:weld :weld2 :ship :constraint-right [10.0 10.0])
 
   (create-joint:prismatic :prismatic :rail :ship [-50.0 0.0] [50.0 0.0])
-  (translate-bodies [:rail] 200 -304)
-  (translate-bodies [:ship :constraint-left :constraint-right] 200 -304)
+  (translate-bodies [:rail] [200 -304])
+  (translate-bodies [:ship :constraint-left :constraint-right] [200 -304])
   {})
 
 (defn reset []

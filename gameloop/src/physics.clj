@@ -10,9 +10,9 @@
 (defonce bodies (atom {}))
 
 (defn create-body:rectangle
-  ([[x-pos y-pos width height & [rotation] :as t] id] ; TODO wrap [x y] [w h]
+  ([t id]
    (create-body:rectangle t id :normal))
-  ([[x-pos y-pos width height & [rotation]] id mass-type]
+  ([[[x-pos y-pos] [width height] & [rotation]] id mass-type]
    (let [body      (Body.)
          rectShape (Rectangle. width height)]
      (.addFixture body rectShape)
@@ -89,7 +89,7 @@
 (defn set-maximum-motor-torque [joint-id max-torque]
   (.setMaximumMotorTorque (joint-id @joints) max-torque))
 
-(defn translate-bodies [ids x y] ; TODO wrap x y
+(defn translate-bodies [ids [x y]]
   (mapv #(.translate (% @bodies) x y) ids))
 
 (defn set-linear-velocity [id [x y]]
