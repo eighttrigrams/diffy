@@ -8,8 +8,10 @@
 (def SHIP-SPEED 10)
 
 (defn spawn []
+  (create-body:rectangle [0 104 4 4] :tip)
   (create-body:rectangle [0 0 4 200] :rod)
-  (translate-bodies [:rod] 200 -150)
+  (create-joint:weld :tip-rod :rod :tip [0.0 102.0])
+  (translate-bodies [:rod :tip] 200 -150)
 
   (create-body:rectangle [-150.0 -50 25 100] :pillar-left :infinite)
   (create-body:rectangle [150.0 -50 25 100] :pillar-right :infinite)
