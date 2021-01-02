@@ -29,13 +29,12 @@
 
   (create-joint:prismatic :prismatic :rail :ship [-50.0 0.0] [50.0 0.0])
   (translate-bodies [:rail] 200 -304)
-  (translate-bodies [:ship :constraint-left :constraint-right] 200 -304))
+  (translate-bodies [:ship :constraint-left :constraint-right] 200 -304)
+  {})
 
 (defn reset []
   (remove-bodies-and-joints)
   (spawn))
-
-(defn init [] (spawn) {})
 
 (defn on-tick-observable [notify]
   (fn on-tick [{cmd :cmd :as state} keys-pressed tick-in-ms]
@@ -60,4 +59,4 @@
               (notify)))))))
 
 (defn go [on-tick-observer]
-  (runner/run (init) (on-tick-observable on-tick-observer)))
+  (runner/run (spawn) (on-tick-observable on-tick-observer)))
