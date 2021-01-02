@@ -12,7 +12,7 @@
     {:joint-ref         joint
      :action-exectuted? false}))
 
-(defn on-tick [notify state keys-pressed tick-in-ms]
+(defn on-tick [state keys-pressed tick-in-ms]
   (reduce
    (fn [state body]
      (if (and (< -0.5 (:rotation body))
@@ -22,8 +22,7 @@
          (assoc state :action-exectuted? true))
        state))
    state (ph/get-engine-bodies [:arm]))
-  (notify keys-pressed)
   state)
 
-(defn go [notify]
-  (runner/run (init) (partial on-tick notify)))
+(defn -main [& args]
+  (runner/run (init) (partial on-tick)))
