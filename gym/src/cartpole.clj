@@ -11,7 +11,8 @@
   (create-body:rectangle [0 104 4 4] :tip)
   (create-body:rectangle [0 0 4 200] :rod)
   (create-joint:weld :tip-rod :rod :tip [0.0 102.0])
-  (translate-bodies [:rod :tip] 200 -150)
+  (translate-bodies [:rod :tip] 200 -194)
+  (set-linear-velocity :tip [30.0 0.0])
 
   (create-body:rectangle [-150.0 -50 25 100] :pillar-left :infinite)
   (create-body:rectangle [150.0 -50 25 100] :pillar-right :infinite)
