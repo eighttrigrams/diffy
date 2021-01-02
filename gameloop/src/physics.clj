@@ -21,10 +21,7 @@
      (when (not (nil? rotation)) (.rotate body rotation))
      (.translate body x-pos y-pos)
      (.addBody world body)
-     (swap! bodies assoc id body)
-
-     ;; TODO review: needed?
-     [id body])))
+     (swap! bodies assoc id body))))
 
 (defn get-engine-bodies
   ([] (get-engine-bodies nil))
