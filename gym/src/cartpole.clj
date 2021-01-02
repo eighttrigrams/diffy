@@ -30,16 +30,17 @@
 
 (def speed 10)
 
-(defn on-tick [notify state keys-pressed tick-in-ms]
-  (cond
-    (.contains keys-pressed \a)
-    (set-motor-speed :prismatic speed)
-    (.contains keys-pressed \d)
-    (set-motor-speed :prismatic (- speed))
-    :else (set-motor-speed :prismatic 0))
-  (-> state
-      (assoc :rotation (get-rotation :rod))
-      (notify)))
+(defn on-tick-observer [notify-subscriber]
+  (fn on-tick [state keys-pressed tick-in-ms]
+    (cond
+      (.contains keys-pressed \a)
+      (set-motor-speed :prismatic speed)
+      (.contains keys-pressed \d)
+      (set-motor-speed :prismatic (- speed))
+      :else (set-motor-speed :prismatic 0))
+    (-> state
+        (assoc :rotation (get-rotation :rod))
+        (notify-subscriber))))
 
-(defn go [notify]
-  (runner/run (init) (partial on-tick notify)))
+(defn go [on-tick-subscriber]
+  (runner/run (init) (on-tick-observer on-tick-subscriber)))
