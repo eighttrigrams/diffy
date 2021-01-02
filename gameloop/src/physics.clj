@@ -42,7 +42,6 @@
 (defn step-in-ms [tick-in-ms]
   (.step world tick-in-ms))
 
-;; https://github.com/dyn4j/dyn4j/blob/master/src/main/java/org/dyn4j/dynamics/joint/RevoluteJoint.java
 (defn create-joint:revolute [id body1-id body2-id [x y]]
   (let [joint (RevoluteJoint. (body1-id @bodies)
                               (body2-id @bodies)
