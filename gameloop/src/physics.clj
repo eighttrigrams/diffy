@@ -29,21 +29,18 @@
 (defn get-engine-bodies
   ([] (get-engine-bodies nil))
   ([keys]
-   (let [bodies           (.getBodies world)
-         map-f            (map
-                           (fn prepare-body
-                             [^Body body]
-                             (let [user-data (.getUserData body)]
-                               {:x          (.getTranslationX (.getTransform body))
-                                :y          (.getTranslationY (.getTransform body))
-                                :properties user-data
-                                :body       body
-                                :rotation   (- (.getRotationAngle (.getTransform body)))})))
-         filter-f         (filter #(.contains keys (-> % :properties :id)))
-         xf               (if (nil? keys) map-f (comp map-f filter-f))]
-     (if (not bodies)
-       '()
-       (eduction xf bodies)))))
+   (if (not bodies)
+     '()
+     (map
+      (fn prepare-body
+        [^Body body]
+        (let [user-data (.getUserData body)]
+          {:x          (.getTranslationX (.getTransform body))
+           :y          (.getTranslationY (.getTransform body))
+           :properties user-data
+           :body       body
+           :rotation   (- (.getRotationAngle (.getTransform body)))}))
+      (vals @bodies)))))
 
 (defn step-in-ms [tick-in-ms]
   (.step world tick-in-ms))
