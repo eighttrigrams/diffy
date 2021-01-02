@@ -31,7 +31,7 @@
   (create-joint:weld :weld2 :ship :constraint-right [10.0 10.0])
 
   (create-joint:prismatic :prismatic :rail :ship [-50.0 0.0] [50.0 0.0])
-  (translate-bodies [:rail] [200 -304])
+  (translate-bodies [:rail] [200 -299])
   (translate-bodies [:ship :constraint-left :constraint-right] [200 -304])
   {})
 
