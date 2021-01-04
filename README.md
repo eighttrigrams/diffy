@@ -1,6 +1,6 @@
 # Diffy
 
-Neural Network 
+Neural Network for Clojure
 
 * Dense layer with a single or multiple bias values
 * Sigmoid activation function
