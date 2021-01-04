@@ -1,6 +1,6 @@
-(ns mnist.mnist
-  (:require [mnist.mnist-common :refer :all]
-            [mnist.load-mnist :as mn]
+(ns examples.mnist.mnist
+  (:require [examples.mnist.mnist-common :refer :all]
+            [examples.mnist.load-mnist :as mn]
             [diffy.matrix.matrix :refer :all]
             [clojure.core.matrix :as ccm]
             [diffy.matrix.clojure-core-matrix

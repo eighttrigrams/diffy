@@ -1,6 +1,6 @@
-(ns mnist.mnist-neander
-  (:require [mnist.mnist-common :refer :all]
-            [mnist.load-mnist :as mn]
+(ns examples.mnist.mnist-neander
+  (:require [examples.mnist.mnist-common :refer :all]
+            [examples.mnist.load-mnist :as mn]
             [diffy.matrix.matrix :refer :all]
             [diffy.matrix.neander-matrix
              :refer  [impl]

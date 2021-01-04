@@ -1,4 +1,4 @@
-(ns mnist.mnist-common
+(ns examples.mnist.mnist-common
   (:require [diffy.dense :as layer]
             [diffy.net :as diffy]
             [diffy.helpers :as h]

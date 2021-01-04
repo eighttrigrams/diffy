@@ -1,4 +1,4 @@
-(ns mnist.load-mnist
+(ns examples.mnist.load-mnist
   (:require [clojure.data.csv :as csv]
             [clojure.java.io :as io]
             [diffy.matrix.matrix :refer :all]))

@@ -1,9 +1,18 @@
 {:deps    {com.cognitect/test-runner        {:git/url "https://github.com/cognitect-labs/test-runner.git"
                                              :sha     "209b64504cb3bd3b99ecfec7937b358a879f55c1"}
+
+           ;; core matrix
            net.mikera/core.matrix           {:mvn/version "0.62.0"}
            net.mikera/vectorz-clj           {:mvn/version "0.48.0"}
+
+           ;; neanderthal
            uncomplicate/neanderthal         {:mvn/version "0.39.0"}
            uncomplicate/fluokitten          {:mvn/version "0.9.1"}
-           org.bytedeco/mkl-platform-redist {:mvn/version "2020.3-1.5.4"}}
+           org.bytedeco/mkl-platform-redist {:mvn/version "2020.3-1.5.4"}
+
+           ;; other
+           org.clojure/data.csv             {:mvn/version "1.0.0"}
+           gym                              {:git/url "https://github.com/danielmarreirosdeoliveira/gym.git"
+                                             :sha     "b200ebf85b7b0ae0292e86bbc7c6f8b15f521af8"}}
  :aliases {:test {:extra-paths ["test"]
                   :main-opts   ["-m" "cognitect.test-runner"]}}}
