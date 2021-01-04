@@ -1,4 +1,4 @@
-(ns physics
+(ns engine.physics
   (:import (org.dyn4j.dynamics Body World)
            (org.dyn4j.dynamics.joint Joint MotorJoint RevoluteJoint WeldJoint PrismaticJoint)
            (org.dyn4j.geometry Rectangle MassType Vector2 Mass)))

@@ -1,7 +1,7 @@
-(ns cartpole
+(ns gym.envs.cartpole
   (:require
-    [runner :as runner]
-    [physics :refer :all]))
+    [engine.gameloop :as gameloop]
+    [engine.physics :refer :all]))
 
 (def MAX-ANGLE 0.25)
 
@@ -64,4 +64,4 @@
               (notify)))))))
 
 (defn go [on-tick-observer]
-  (runner/run (spawn) (on-tick-observable on-tick-observer)))
+  (gameloop/start (spawn) (on-tick-observable on-tick-observer)))

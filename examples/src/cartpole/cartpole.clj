@@ -1,5 +1,5 @@
 (ns cartpole.cartpole
-  (:require [cartpole :as cp]))
+  (:require [gym.envs.cartpole :as cp]))
 
 (defn on-tick [{done :done :as state}]
   (prn state)

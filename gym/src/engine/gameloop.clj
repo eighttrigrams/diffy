@@ -1,10 +1,10 @@
-(ns runner
+(ns engine.gameloop
   (:import (javax.swing Timer))
-  (:require [paint :as p]
-            [physics :as ph]
-            [ui :as ui]))
+  (:require [engine.paint :as p]
+            [engine.physics :as ph]
+            [engine.ui :as ui]))
 
-(defn run
+(defn start
   [state on-tick]
   (let [state                            (atom state)
         atom:keys                        (atom #{})

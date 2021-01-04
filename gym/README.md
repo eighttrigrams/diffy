@@ -1,10 +1,11 @@
 # Gym
 
-Uses `gameloop` to providea a classic CartPole like environment to `diffy-examples`. 
+Provides a classic CartPole like environment.
+Runs on a very simple game engine built using dyn4j and some java2d.
 
 ## Run
 
 Usually used as a lib, but for development there is
 a runnable example
 
-    clj -m torso
+    clj -m demo

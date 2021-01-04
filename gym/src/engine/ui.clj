@@ -1,4 +1,4 @@
-(ns ui
+(ns engine.ui
   (:import (javax.swing Timer JFrame)
            (java.awt Canvas)
            (java.awt GraphicsEnvironment)))
