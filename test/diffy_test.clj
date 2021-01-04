@@ -9,9 +9,9 @@
             [diffy.matrix.clojure-matrix
              :refer  [impl]
              :rename {impl clojure-matrix-impl}]
-            [diffy.matrix.neander-matrix
-             :refer  [impl]
-             :rename {impl neander-matrix-impl}]
+;            [diffy.matrix.neander-matrix
+;             :refer  [impl]
+;             :rename {impl neander-matrix-impl}]
             [clojure.core.matrix :as ccm]
             [diffy.matrix.clojure-core-matrix
              :refer  [impl]
@@ -26,8 +26,8 @@
                 (choose-impl! clojure-matrix-impl)
                 (test)
                 (choose-impl! clojure-core-matrix-impl)
-                (test)
-                (choose-impl! neander-matrix-impl)
+;                (test)
+;                (choose-impl! neander-matrix-impl)
                 (test)))
 
 (def comparison-precision 1.0E-6)
