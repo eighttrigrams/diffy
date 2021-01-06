@@ -13,8 +13,3 @@
   (activation-layer
    (partial emap #(if (> % 0.0) % 0.0))
    (partial emap (fn [i _o e] (if (> i 0.0) e 0.0)))))
-
-(def direct
-  (activation-layer
-   identity
-   (fn [I O E] E)))
