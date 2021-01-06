@@ -1,5 +1,6 @@
 (ns diffy.matrix.matrix
-  (:require [diffy.matrix.clojure-matrix :refer [impl] :rename {impl clojure-matrix-impl}]))
+  (:require [diffy.matrix.clojure-matrix :refer [impl]
+             :rename                            {impl clojure-matrix-impl}]))
 
 (def chosen-impl (atom clojure-matrix-impl))
 
@@ -9,34 +10,52 @@
 ;; s     - a scalar
 
 (defn choose-impl!
-  [impl] (reset! chosen-impl impl))
+  [impl]
+  (reset! chosen-impl impl))
 
 (defn scalar?
-  [A] ((:scalar? @chosen-impl) A))
+  [A]
+  ((:scalar? @chosen-impl) A))
 
 (defn matrix
-  [A] ((:matrix @chosen-impl) A))
+  [A]
+  ((:matrix @chosen-impl) A))
 
-(defn to-clj
-  [A] ((:to-clj @chosen-impl) A))
+(defn diagonal-matrix ;; TODO implement in neanderthal
+  [vals]
+  ((:diagonal-matrix @chosen-impl) vals))
+
+(defn repetition-matrix ;; TODO review if there is a name for such a thing
+  [vals]
+  ((:repetition-matrix @chosen-impl) vals))
 
 (defn create
-  [n-in n-out] ((:create @chosen-impl) n-out n-in))
+  [n-in n-out]
+  ((:create @chosen-impl) n-out n-in))
+
+(defn to-clj
+  [A]
+  ((:to-clj @chosen-impl) A))
 
 (defn outer-product
-  [v w] ((:outer-product @chosen-impl) v w))
+  [v w]
+  ((:outer-product @chosen-impl) v w))
 
 (defn transpose
-  [M] ((:transpose @chosen-impl) M))
+  [M]
+  ((:transpose @chosen-impl) M))
 
 (defn mmul
-  [M v] ((:mmul @chosen-impl) M v))
+  [M v]
+  ((:mmul @chosen-impl) M v))
 
 (defn mul
-  [A s] ((:mul @chosen-impl) A s))
+  [A s]
+  ((:mul @chosen-impl) A s))
 
 (defn sum
-  [v] ((:sum @chosen-impl) v))
+  [v]
+  ((:sum @chosen-impl) v))
 
 (defn add
   "Adds a scalar to each element of a vector or a matrix"
@@ -46,14 +65,17 @@
 (defn madd
   "Adds element-wise. Works for scalars, vectors, matrices.
   Requires the arguments to be of the same shapes."
-  [& As] (apply (:madd @chosen-impl) As))
+  [& As]
+  (apply (:madd @chosen-impl) As))
 
 (defn emap
   "Applies f to 1, 2 or 3 As
   f must accept this amount of args.
   "
-  [f & As] (apply (:emap @chosen-impl) f As))
+  [f & As]
+  (apply (:emap @chosen-impl) f As))
 
 (defn sub
   "Subtracts element wise. Works for scalars, vectors, matrices."
-  [& As] (apply (:sub @chosen-impl) As))
+  [& As]
+  (apply (:sub @chosen-impl) As))
