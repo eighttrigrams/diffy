@@ -6,13 +6,6 @@
 
 (def impl
   {:matrix            matrix
-   :diagonal-matrix   diagonal-matrix
-   ;; TODO make el-count function
-   ;; TODO review impl
-   :repetition-matrix (fn [vals]
-                        ((:matrix impl)
-                          (mapv #(vec (repeat (count ((:to-clj impl) vals)) %))
-                                ((:to-clj impl) vals))))
    :create            zero-matrix
    :to-clj            #(-> % (use-if scalar? to-nested-vectors))
    ;; currently for M or s

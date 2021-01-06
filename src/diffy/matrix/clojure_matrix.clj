@@ -8,18 +8,6 @@
                            (mapv (fn [n-in-] 0.0)
                                  (range n-in)))
                          (range n-out)))
-   :diagonal-matrix   (fn [values]
-                        (vec
-                         (map-indexed
-                          (fn [i _]
-                            (vec
-                             (map-indexed
-                              (fn [j v]
-                                (if (= i j) v 0.0))
-                              values)))
-                          values)))
-   :repetition-matrix (fn [values]
-                        (mapv #(vec (repeat (count values) %)) values))
    :to-clj            identity
    :scalar?           (fn [A]
                         (number? A))

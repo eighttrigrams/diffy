@@ -21,14 +21,6 @@
   [A]
   ((:matrix @chosen-impl) A))
 
-(defn diagonal-matrix ;; TODO implement in neanderthal
-  [vals]
-  ((:diagonal-matrix @chosen-impl) vals))
-
-(defn repetition-matrix ;; TODO review if there is a name for such a thing
-  [vals]
-  ((:repetition-matrix @chosen-impl) vals))
-
 (defn create
   [n-in n-out]
   ((:create @chosen-impl) n-out n-in))
