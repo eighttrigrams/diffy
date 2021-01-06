@@ -21,11 +21,6 @@
                 (choose-impl! clojure-core-matrix-impl)
                 (test)))
 
-;; TODO remove duplication
-;(def comparison-precision 1.0E-6)
-;(defn- compare-predictions [preds1 preds2 precision]
-;  (every? #(< (Math/abs %) precision) (mapv #(- %1 %2) (to-clj preds1) preds2)))
-
 (deftest test-relu
   (let [activate      (relu
                        ;; TODO review def usage
