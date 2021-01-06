@@ -34,4 +34,3 @@ Get mnist_784_csv.csv from https://datahub.io/machine-learning/mnist_784
 
     $ clj -m examples.cartpole.cartpole    ;; classic cartpole
 
-TODO solve
