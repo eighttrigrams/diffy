@@ -9,7 +9,7 @@
 
 (def EPISODES 1000000)
 
-(def MAX-DURATION 200)
+(def MAX-DURATION 500)
 
 (def MAX-ANGLE 0.14)
 
