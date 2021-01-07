@@ -12,7 +12,9 @@
 (def MAX-DURATION 200)
 
 (def MAX-ANGLE 0.14)
-R
+
+(def LEARNING-RATE 0.03)
+
 (defn network []
   (diffy/sequential
    h/rand-initializer
@@ -55,7 +57,7 @@ R
                            actions
                            rewards)
         mini-batch        (mapv vector observations converted-actions)]
-    (diffy/train net loss 0.03 [mini-batch])))
+    (diffy/train net loss LEARNING-RATE [mini-batch])))
 
 (defn next-episode [{episode               :episode
                      step                  :step
