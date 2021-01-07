@@ -1,11 +1,11 @@
-(ns examples.cartpole.cartpole
+(ns examples.cartpole
   (:require [gym.envs.cartpole :as cp]
             [diffy.activation :as activation]
             [diffy.net :as diffy]
             [diffy.helpers :as h]
             [diffy.dense :as layer]
             [diffy.layers :as l]
-            [examples.cartpole.helpers :refer :all]))
+            [examples.helpers :refer :all]))
 
 (def EPISODES 1000000)
 

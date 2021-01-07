@@ -1,4 +1,4 @@
-(ns examples.cartpole.helpers)
+(ns examples.helpers)
 
 ;; adapted from drlia book
 (defn discount [rewards & {:keys [gamma] :or {gamma 0.99}}]
