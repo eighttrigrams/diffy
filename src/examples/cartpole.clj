@@ -82,8 +82,6 @@
                 done         :done
                 net          :net
                 step         :step
-                cmd          :cmd
-                keys-pressed :keys-pressed
                 :as          state}]
 
   (if (= episode EPISODES)
