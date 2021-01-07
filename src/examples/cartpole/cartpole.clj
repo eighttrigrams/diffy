@@ -12,9 +12,7 @@
 (def MAX-DURATION 200)
 
 (def MAX-ANGLE 0.14)
-
-(def MIN-STEPS-FOR-TRAIN 10)
-
+R
 (defn network []
   (diffy/sequential
    h/rand-initializer
@@ -106,4 +104,4 @@
                 {:episode               0
                  :max-angle             MAX-ANGLE
                  :net                   (network)
-                 :train-steps-threshold MIN-STEPS-FOR-TRAIN})))
+                 :train-steps-threshold 10})))
