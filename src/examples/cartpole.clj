@@ -90,9 +90,7 @@
     (assoc state :cmd :end)
     (if (or done (> step MAX-DURATION))
       (next-episode state)
-      (let [action            (if (not (empty? keys-pressed))
-                                (if (.contains keys-pressed \a) 0 1)
-                                (second (rand-choice (predict net observation) rand)))]
+      (let [action (second (rand-choice (predict net observation) rand))]
         (-> state
             (assoc :cmd (if (= 0 action) :left :right))
             (update-in [:transitions :observations] (partial cons observation))
