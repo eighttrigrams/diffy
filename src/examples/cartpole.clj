@@ -5,7 +5,12 @@
             [diffy.helpers :as h]
             [diffy.dense :as layer]
             [diffy.layers :as l]
-            [examples.helpers :refer :all]))
+            [examples.helpers :refer :all]
+            [diffy.matrix.matrix :refer :all]
+            [clojure.core.matrix :as ccm]
+            [diffy.matrix.clojure-core-matrix
+             :refer  [impl]
+             :rename {impl clojure-core-matrix-impl}]))
 
 (def EPISODES 1000000)
 
@@ -96,6 +101,8 @@
             (update-in [:transitions :rewards] (partial cons step)))))))
 
 (defn -main [& args]
+  (ccm/set-current-implementation :vectorz)
+  (choose-impl! clojure-core-matrix-impl)
   (cp/go on-tick
          identity
          (merge EPISODE-START-STATE
