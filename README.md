@@ -1,5 +1,7 @@
 # Diffy
 
+**(experimental branch - some things do not work yet)**
+
 Neural Network for Clojure
 
 * Dense layer with a single or multiple bias values
