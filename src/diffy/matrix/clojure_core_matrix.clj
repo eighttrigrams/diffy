@@ -11,7 +11,7 @@
                                 (mapv #(with-meta % {:type :ccm}) A)
                                 A) {:type :ccm})))
 
-(defn create [A] (matrix (ccm/zero-matrix A)))
+(defn create [n-out n-in] (matrix (ccm/zero-matrix n-in n-out)))
 
 (defmethod m/to-clj :ccm
   [A] (matrix (-> A (use-if number? ccm/to-nested-vectors))))

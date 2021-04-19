@@ -5,7 +5,7 @@
   [[W b]]
   (let [init (fn [_] (- 1 (rand 2)))]
     [(m/emap init W)
-     (m/emap init b)]))
+     (if (number? b) (init b) (m/emap init b))]))
 
 (defn multiply-dense-layers [scalar layers]
   (mapv

@@ -1,14 +1,16 @@
 (ns diffy.matrix.clojure-matrix
   (:require [diffy.matrix.matrix :as m]))
 
-(defn matrix [A] 
+(defn matrix 
+  [A] 
   (if (number? A)
     A
     (with-meta (if (vector? (first A))
                  (mapv #(with-meta % {:type :cm}) A)
                  A) {:type :cm})))
 
-(defn create [n-out n-in]
+(defn create 
+  [n-out n-in]
   (matrix (mapv
            (fn [_n-out]
              (mapv (fn [_n-in] 0.0)
@@ -16,7 +18,8 @@
            (range n-out))))
 
 (defmethod m/to-clj :cm 
-  [A] A)
+  [A] 
+  A)
 
 (defmethod m/outer-product [:cm :cm]
   [v w]

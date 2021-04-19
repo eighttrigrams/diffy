@@ -5,17 +5,13 @@
 ;; v,w   - a vector, as created by (:matrix @chosen-impl)
 ;; s     - a scalar
 
-(defmulti to-clj
+(defmulti to-clj 
   (fn [A]
     (if (number? A)
       :default
       (:type (meta A)))))
 
-(defmethod to-clj :default
-  [s]
-  s)
-
-(defmulti outer-product
+(defmulti outer-product 
   (fn [v w]
     [(:type (meta v)) (:type (meta w))]))
 
@@ -32,10 +28,6 @@
     (if (number? v)
       :default
       (:type (meta v)))))
-
-(defmethod mul :default
-  [v s]
-  (* v s))
 
 (defmulti sum
   (fn [v]
@@ -56,14 +48,6 @@
         :default-2
         (:type (meta (first As)))))))
 
-(defmethod madd :default-1
-  [A]
-  A)
-
-(defmethod madd :default-2
-  [& As]
-  (apply + As))
-
 (defmulti emap 
   "Applies f to 1, 2 or 3 As
   f must accept this amount of args."
@@ -77,6 +61,17 @@
       :default
       (:type (meta (first As))))))
 
+(defmethod to-clj :default
+  [s] s)
+
+(defmethod mul :default
+  [v s] (* v s))
+
+(defmethod madd :default-1
+  [A] A)
+
+(defmethod madd :default-2
+  [& As] (apply + As))
+
 (defmethod sub :default
-  [v w]
-  (- v w))
+  [v w] (- v w))

@@ -6,23 +6,22 @@
             [diffy.helpers :as h]
             [diffy.activation :as activation]
             [diffy.loss :as l]
-            [diffy.matrix.matrix :refer :all]
-            [clojure.core.matrix :as ccm]
-;            [diffy.matrix.neander-matrix
-;             :refer  [impl]
-;             :rename {impl neander-matrix-impl}]
-            [diffy.matrix.clojure-core-matrix
-             :refer  [impl]
-             :rename {impl clojure-core-matrix-impl}]))
+            ;;[diffy.matrix.neander-matrix :as neander]
+            ;;[diffy.matrix.clojure-matrix :as cm]
+            [diffy.matrix.clojure-core-matrix :as ccm]))
+
+(defonce create ccm/create)
+
+(defonce matrix ccm/matrix)
 
 (defn network []
   (diffy/sequential
    h/rand-initializer
    784
-   [(layer/dense) activation/sigmoid 100]
-   [(layer/dense) activation/sigmoid 100]
-   [(layer/dense) activation/sigmoid 50]
-   [(layer/dense false) activation/sigmoid 10]))
+   [(layer/dense create matrix) activation/sigmoid 100]
+   [(layer/dense create matrix) activation/sigmoid 100]
+   [(layer/dense create matrix) activation/sigmoid 50]
+   [(layer/dense create matrix false) activation/sigmoid 10]))
 
 (defn load-mnist []
   (with-open [reader (io/reader "resources/mnist_784_csv.csv")]
@@ -72,10 +71,7 @@
    (network)
    (range n-epochs)))
 
-(defn -main [& args]
-  (ccm/set-current-implementation :vectorz)
-  (choose-impl! clojure-core-matrix-impl)
-;  (choose-impl! neander-matrix-impl)
+(defn -main [& _args]
   (let [mnist            (load-mnist)
         learning-rate    0.005
         partition-size   25
