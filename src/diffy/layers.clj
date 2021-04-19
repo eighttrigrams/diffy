@@ -1,5 +1,4 @@
-(ns diffy.layers
-  (:require [diffy.helpers :as h]))
+(ns diffy.layers)
 
 (defn- construct
   ([prev-layer X forward calc-backward-e]

@@ -1,15 +1,15 @@
 (ns diffy.helpers
-  (:require [diffy.matrix.matrix :refer :all]))
+  (:require [diffy.matrix.matrix :as m]))
 
 (defn rand-initializer
   [[W b]]
   (let [init (fn [_] (- 1 (rand 2)))]
-    [(emap init W)
-     (emap init b)]))
+    [(m/emap init W)
+     (m/emap init b)]))
 
 (defn multiply-dense-layers [scalar layers]
   (mapv
    (fn [[W b]]
-     [(mul W scalar)
-      (mul b scalar)])
+     [(m/mul W scalar)
+      (m/mul b scalar)])
    layers))

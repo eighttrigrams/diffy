@@ -1,34 +1,31 @@
 (ns diffy-test
-  (:require [clojure.test :refer :all]
+  (:require [clojure.test :refer [use-fixtures deftest is]]
             [diffy.loss :as l]
             [diffy.activation :as activation]
             [diffy.helpers :as h]
             [diffy.dense :as layer]
             [diffy.net :as diffy]
-            [diffy.matrix.matrix :refer :all]
-            [diffy.matrix.clojure-matrix
-             :refer  [impl]
-             :rename {impl clojure-matrix-impl}]
+            [diffy.matrix.matrix :as m]
+            [diffy.matrix.clojure-matrix :as cm]
+            [diffy.matrix.clojure-core-matrix :as ccm]))
 ;            [diffy.matrix.neander-matrix
 ;             :refer  [impl]
 ;             :rename {impl neander-matrix-impl}]
-            [clojure.core.matrix :as ccm]
-            [diffy.matrix.clojure-core-matrix
-             :refer  [impl]
-             :rename {impl clojure-core-matrix-impl}]))
+            ;;[clojure.core.matrix :as ccm]
+            ;#_[diffy.matrix.clojure-core-matrix
+               ;:refer  [impl]
+              ;; :rename {impl clojure-core-matrix-impl}
 
-(use-fixtures :once
-              (fn [all-tests]
-                (ccm/set-current-implementation :vectorz)
-                (all-tests)))
+(defonce create-impl (atom nil))
+
+(defonce matrix-impl (atom nil))
+
 (use-fixtures :each
-              (fn [test]
-                (choose-impl! clojure-matrix-impl)
-                (test)
-                (choose-impl! clojure-core-matrix-impl)
-;                (test)
-;                (choose-impl! neander-matrix-impl)
-                (test)))
+  (fn [test]
+    (reset! create-impl cm/create) (reset! matrix-impl cm/matrix)
+    (test)
+    (reset! create-impl ccm/create) (reset! matrix-impl ccm/matrix)
+    (test)))
 
 (def comparison-precision 1.0E-6)
 
@@ -59,27 +56,28 @@
 
 (def g_b_O (apply + g_bs_O))
 
+
 (defn- network []
   (diffy/sequential
-   [[(matrix W_H) (matrix b_H)]
-    [(matrix W_O) (matrix b_O)]]
+   [[(@matrix-impl W_H) (@matrix-impl b_H)]
+    [(@matrix-impl W_O) (@matrix-impl b_O)]]
    2
-   [(layer/dense false) activation/sigmoid 2]
-   [(layer/dense false) activation/sigmoid 2]))
+   [(layer/dense @create-impl @matrix-impl false) activation/sigmoid 2]
+   [(layer/dense @create-impl @matrix-impl false) activation/sigmoid 2]))
 
 (defn- multi-b-network []
   (diffy/sequential
-   [[(matrix W_H) (matrix [b_H b_H])]
-    [(matrix W_O) (matrix [b_O b_O])]]
+   [[(@matrix-impl W_H) (@matrix-impl [b_H b_H])]
+    [(@matrix-impl W_O) (@matrix-impl [b_O b_O])]]
    2
-   [(layer/dense) activation/sigmoid 2]
-   [(layer/dense) activation/sigmoid 2]))
+   [(layer/dense @create-impl @matrix-impl) activation/sigmoid 2]
+   [(layer/dense @create-impl @matrix-impl) activation/sigmoid 2]))
 
 (defn- get-gradients [[_ initial-weights] [_ updated-weights]]
   (mapv
    (fn [weights0 weights1]
-     [(sub (first weights0) (first weights1))
-      (sub (second weights0) (second weights1))])
+     [(m/sub (first weights0) (first weights1))
+      (m/sub (second weights0) (second weights1))])
    initial-weights updated-weights))
 
 (defn- train-and-get-gradients [network mini-batch]
@@ -91,14 +89,14 @@
                 [mini-batch])))
 
 (defn- compare-predictions [preds1 preds2 precision]
-  (every? #(< (Math/abs %) precision) (mapv #(- %1 %2) (to-clj preds1) preds2)))
+  (every? #(< (Math/abs %) precision) (mapv #(- %1 %2) (m/to-clj preds1) preds2)))
 
 (defn- compare-layers [layers1 layers2 precision]
   (every? true?
           (mapv
            (fn [[W0 b0] [W1 b1]]
-             (let [diff-W  (vec (flatten (to-clj (sub W0 W1))))
-                   diff-b  (to-clj (sub b0 b1))
+             (let [diff-W  (vec (flatten (m/to-clj (m/sub W0 W1))))
+                   diff-b  (m/to-clj (m/sub b0 b1))
                    diff-b  (if (number? diff-b) [diff-b] (vec (flatten diff-b)))
                    entries (vec (concat diff-W diff-b))]
                (every? #(< (Math/abs %) precision) entries)))
@@ -107,13 +105,13 @@
 (deftest test-predict
   (is
    (compare-predictions
-    (diffy/predict (network) (matrix X))
+    (diffy/predict (network) (@matrix-impl X))
     [0.751365 0.772928] comparison-precision)))
 
 (deftest test-train
-  (let [mini-batch-row   [(matrix X) (matrix Y)]
-        result-1         [[(matrix g_W_H) (matrix g_b_H)]
-                          [(matrix g_W_O) (matrix g_b_O)]]
+  (let [mini-batch-row   [(@matrix-impl X) (@matrix-impl Y)]
+        result-1         [[(@matrix-impl g_W_H) (@matrix-impl g_b_H)]
+                          [(@matrix-impl g_W_O) (@matrix-impl g_b_O)]]
         result-2         (h/multiply-dense-layers 2 result-1)]
     (is
      (compare-layers
@@ -127,11 +125,12 @@
       comparison-precision))))
 
 (deftest test-multiple-b-values
-  (let [mini-batch-row   [(matrix X) (matrix Y)]]
+  (let [mini-batch-row   [(@matrix-impl X) (@matrix-impl Y)]
+        multi-b (multi-b-network)]
     (is
-     (compare-layers (train-and-get-gradients (multi-b-network) [mini-batch-row])
-                     [[(matrix g_W_H)
-                       (matrix g_bs_H)]
-                      [(matrix g_W_O)
-                       (matrix g_bs_O)]]
+     (compare-layers (train-and-get-gradients multi-b [mini-batch-row])
+                     [[(@matrix-impl g_W_H)
+                       (@matrix-impl g_bs_H)]
+                      [(@matrix-impl g_W_O)
+                       (@matrix-impl g_bs_O)]]
                      comparison-precision))))

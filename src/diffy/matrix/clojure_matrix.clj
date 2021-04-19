@@ -1,45 +1,66 @@
-(ns diffy.matrix.clojure-matrix)
+(ns diffy.matrix.clojure-matrix
+  (:require [diffy.matrix.matrix :as m]))
 
-(def impl
-  {:matrix            identity
-   :create            (fn [n-out n-in]
-                        (mapv
-                         (fn [n-out-]
-                           (mapv (fn [n-in-] 0.0)
-                                 (range n-in)))
-                         (range n-out)))
-   :to-clj            identity
-   :scalar?           (fn [A]
-                        (number? A))
-   :outer-product     (fn
-                        [v w]
-                        (mapv #(mapv (partial * %1) %2) v (repeat w)))
-   :transpose         (partial apply map vector)
-   :mmul              (fn mmul [M v]
-                        (mapv #(reduce + (map * % v)) M))
-   :mul               (fn [v s]
-                        (if ((:scalar? impl) v)
-                          (* v s)
-                          ((:emap impl) #(* % s) v)))
-   :sum               (partial apply +)
-   :add               (fn [A s]
-                        ((:emap impl) (partial + s) A))
-   :madd              (fn [A & args]
-                        (if (= (count args) 0)
-                          A
-                          (if (number? A)
-                            (apply + (cons A args))
-                            (apply (:emap impl) + (cons A args)))))
-   :emap              (fn [f el & els]
-                        (if ((:scalar? impl) el)
-                          (apply f (cons el els))
-                          (apply mapv
-                                 (fn [& elements]
-                                   (if (vector? (first elements))
-                                     (apply (:emap impl) f elements)
-                                     (apply f elements)))
-                                 (cons el els))))
-   :sub               (fn [v w]
-                        (if ((:scalar? impl) v)
-                          (- v w)
-                          ((:emap impl) #(- %1 %2) v w)))})
+(defn matrix [A] 
+  (if (number? A)
+    A
+    (with-meta (if (vector? (first A))
+                 (mapv #(with-meta % {:type :cm}) A)
+                 A) {:type :cm})))
+
+(defn create [n-out n-in]
+  (matrix (mapv
+           (fn [_n-out]
+             (mapv (fn [_n-in] 0.0)
+                   (range n-in)))
+           (range n-out))))
+
+(defmethod m/to-clj :cm 
+  [A] A)
+
+(defmethod m/outer-product [:cm :cm]
+  [v w]
+  (matrix (mapv #(mapv (partial * %1) %2) v (repeat w))))
+
+(defmethod m/transpose :cm 
+  [A] (matrix (apply (comp #(with-meta % {:type :cm}) map) vector A)))
+
+(defmethod m/mmul [:cm :cm] 
+  [M v]
+  (matrix (mapv #(reduce + (map * % v)) M)))
+
+(defmethod m/mul :cm
+  [v s]
+  (matrix (m/emap #(* % s) v)))
+
+(defmethod m/sum :cm
+  [v]
+  (apply + v))
+
+(defmethod m/add :cm
+  [A s]
+  (m/emap (partial + s) A))
+
+(defmethod m/madd :cm
+  [A & args]
+  (if (number? A)
+    (matrix (apply + (cons A args)))
+    (apply m/emap + (cons A args))))
+
+(defmethod m/emap :cm 
+  [f el & els]
+  (let [wat (matrix (if (number? el)
+                      (apply f (cons el els))
+                      (apply mapv
+                             (fn [& elements]
+                               (if (vector? (first elements))
+                                 (apply m/emap f elements)
+                                 (apply f elements)))
+                             (cons el els))))]
+    wat))
+
+(defmethod m/sub :cm
+  [v w]
+  (matrix (if (number? v)
+            (- v w)
+            (m/emap #(- %1 %2) v w))))

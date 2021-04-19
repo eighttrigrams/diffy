@@ -1,7 +1,7 @@
 (ns diffy.net
   (:require [diffy.helpers :as h]
             [diffy.layers :as l]
-            [diffy.matrix.matrix :refer :all]))
+            [diffy.matrix.matrix :as m]))
 
 (defn predict [net X]
   (first
@@ -10,14 +10,14 @@
 (defn- sum-layer-gradients
   "Works for dense layer weights in the form of [W b]"
   [& layer-gradients]
-  [(apply madd (map first layer-gradients))
-   (apply madd (map second layer-gradients))])
+  [(apply m/madd (map first layer-gradients))
+   (apply m/madd (map second layer-gradients))])
 
 (defn- calc-difference [weights gradients]
   (mapv
    (fn [[W0 b0] [W1 b1]]
-     [(sub W0 W1)
-      (sub b0 b1)])
+     [(m/sub W0 W1)
+      (m/sub b0 b1)])
    weights gradients))
 
 (defn calc-mini-batch-gradients [loss-function learning-rate]

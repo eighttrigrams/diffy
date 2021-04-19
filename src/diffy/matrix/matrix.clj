@@ -1,73 +1,82 @@
-(ns diffy.matrix.matrix
-  (:require [diffy.matrix.clojure-matrix :refer [impl]
-             :rename                            {impl clojure-matrix-impl}]))
-
-(def chosen-impl (atom clojure-matrix-impl))
+(ns diffy.matrix.matrix)
 
 ;; A, B  - a matrix, a vector or a scalar, as created by (:matrix @chosen-impl)
 ;; M     - a matrix, as created by (:matrix @chosen-impl)
 ;; v,w   - a vector, as created by (:matrix @chosen-impl)
 ;; s     - a scalar
 
-(defn choose-impl!
-  [impl]
-  (reset! chosen-impl impl))
+(defmulti to-clj
+  (fn [A]
+    (if (number? A)
+      :default
+      (:type (meta A)))))
 
-(defn scalar?
-  [A]
-  ((:scalar? @chosen-impl) A))
+(defmethod to-clj :default
+  [s]
+  s)
 
-(defn matrix
-  [A]
-  ((:matrix @chosen-impl) A))
+(defmulti outer-product
+  (fn [v w]
+    [(:type (meta v)) (:type (meta w))]))
 
-(defn create
-  [n-in n-out]
-  ((:create @chosen-impl) n-out n-in))
+(defmulti transpose
+  (fn [M]
+    (:type (meta M))))
 
-(defn to-clj
-  [A]
-  ((:to-clj @chosen-impl) A))
+(defmulti mmul
+  (fn [M v]
+    [(:type (meta M)) (:type (meta v))]))
 
-(defn outer-product
-  [v w]
-  ((:outer-product @chosen-impl) v w))
+(defmulti mul
+  (fn [v _s]
+    (if (number? v)
+      :default
+      (:type (meta v)))))
 
-(defn transpose
-  [M]
-  ((:transpose @chosen-impl) M))
-
-(defn mmul
-  [M v]
-  ((:mmul @chosen-impl) M v))
-
-(defn mul
-  [A s]
-  ((:mul @chosen-impl) A s))
-
-(defn sum
-  [v]
-  ((:sum @chosen-impl) v))
-
-(defn add
-  "Adds a scalar to each element of a vector or a matrix"
+(defmethod mul :default
   [v s]
-  ((:add @chosen-impl) v s))
+  (* v s))
 
-(defn madd
+(defmulti sum
+  (fn [v]
+    (:type (meta v))))
+
+(defmulti add
+  "Adds a scalar to each element of a vector or a matrix"
+  (fn [v _s]
+    (:type (meta v))))
+
+(defmulti madd
   "Adds element-wise. Works for scalars, vectors, matrices.
   Requires the arguments to be of the same shapes."
-  [& As]
-  (apply (:madd @chosen-impl) As))
+  (fn [& As]
+    (if (= (count As) 1)
+      :default-1
+      (if (number? (first As))
+        :default-2
+        (:type (meta (first As)))))))
 
-(defn emap
+(defmethod madd :default-1
+  [A]
+  A)
+
+(defmethod madd :default-2
+  [& As]
+  (apply + As))
+
+(defmulti emap 
   "Applies f to 1, 2 or 3 As
-  f must accept this amount of args.
-  "
-  [f & As]
-  (apply (:emap @chosen-impl) f As))
+  f must accept this amount of args."
+  (fn [_f & As] 
+    (:type (meta (first As)))))
 
-(defn sub
+(defmulti sub
   "Subtracts element wise. Works for scalars, vectors, matrices."
-  [& As]
-  (apply (:sub @chosen-impl) As))
+  (fn [& As] 
+    (if (= (count As) 1)
+      :default
+      (:type (meta (first As))))))
+
+(defmethod sub :default
+  [v w]
+  (- v w))

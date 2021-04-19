@@ -1,21 +1,44 @@
 (ns diffy.matrix.clojure-core-matrix
   (:require
-    [clojure.core.matrix :refer :all]))
+    [diffy.matrix.matrix :as m]
+    [clojure.core.matrix :as ccm]))
 
 (defn use-if [a f g] (if (f a) a (g a)))
 
-(def impl
-  {:matrix            matrix
-   :create            zero-matrix
-   :to-clj            #(-> % (use-if scalar? to-nested-vectors))
-   ;; currently for M or s
-   :scalar?           scalar?
-   :outer-product     outer-product
-   :transpose         transpose
-   :mmul              mmul
-   :mul               mul
-   :sum               esum
-   :madd              add
-   :add               add
-   :sub               sub
-   :emap              emap})
+(defn matrix [A] (if (number? A)
+                   A
+                   (with-meta (if (vector? (first A))
+                                (mapv #(with-meta % {:type :ccm}) A)
+                                A) {:type :ccm})))
+
+(defn create [A] (matrix (ccm/zero-matrix A)))
+
+(defmethod m/to-clj :ccm
+  [A] (matrix (-> A (use-if number? ccm/to-nested-vectors))))
+
+(defmethod m/outer-product [:ccm :ccm]
+  [v w] (matrix (ccm/outer-product v w)))
+
+(defmethod m/transpose :ccm
+  [A] (matrix (ccm/transpose A)))
+
+(defmethod m/mmul [:ccm :ccm]
+  [M v] (matrix (ccm/mmul M v)))
+
+(defmethod m/mul :ccm
+  [v s] (matrix (ccm/mul v s)))
+
+(defmethod m/sum :ccm
+  [v] (ccm/esum v))
+
+(defmethod m/add :ccm
+  [A s] (matrix (ccm/add A s)))
+
+(defmethod m/madd :ccm
+  [& As] (matrix (apply ccm/add As)))
+
+(defmethod m/sub :ccm
+  [v w] (matrix (ccm/sub v w)))
+
+(defmethod m/emap :ccm
+  [& args] (matrix (apply ccm/emap args)))

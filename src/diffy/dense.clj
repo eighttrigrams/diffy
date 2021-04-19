@@ -1,20 +1,20 @@
 (ns diffy.dense
   (:require [diffy.layers :as l]
-            [diffy.matrix.matrix :refer :all]))
+            [diffy.matrix.matrix :as m]))
 
 (defn- layer []
   (l/layer
    (fn [[W b] I]
-     ((if (scalar? b) add madd) (mmul W I) b))
+     ((if (number? b) m/add m/madd) (m/mmul W I) b))
    (fn [[_W b] E O]
-     [(outer-product E O)
-      (if (scalar? b) (sum E) E)])
-   (fn [[W b] E]
-     (mmul (transpose W) E))))
+     [(m/outer-product E O)
+      (if (number? b) (m/sum E) E)])
+   (fn [[W _b] E]
+     (m/mmul (m/transpose W) E))))
 
 (defn dense
-  ([] (dense true))
-  ([multiple-bias-values]
+  ([create matrix] (dense create matrix true))
+  ([create matrix multiple-bias-values]
    {:layer   (layer)
     :weights (fn [n-in n-out]
                [(create n-in n-out)

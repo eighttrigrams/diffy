@@ -1,7 +1,7 @@
 (ns diffy.loss
   (:require [diffy.layers :as l]
-            [diffy.matrix.matrix :refer :all]))
+            [diffy.matrix.matrix :as m]))
 
 (def loss
   (l/loss-layer
-   (fn [I Y] (sub I Y))))
+   (fn [I Y] (m/sub I Y))))

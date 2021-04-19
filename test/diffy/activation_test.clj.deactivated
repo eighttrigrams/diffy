@@ -11,15 +11,15 @@
              :rename {impl clojure-core-matrix-impl}]))
 
 (use-fixtures :once
-              (fn [all-tests]
-                (ccm/set-current-implementation :vectorz)
-                (all-tests)))
+  (fn [all-tests]
+    (ccm/set-current-implementation :vectorz)
+    (all-tests)))
 (use-fixtures :each
-              (fn [test]
-                (choose-impl! clojure-matrix-impl)
-                (test)
-                (choose-impl! clojure-core-matrix-impl)
-                (test)))
+  (fn [test]
+    (choose-impl! clojure-matrix-impl)
+    (test)
+    (choose-impl! clojure-core-matrix-impl)
+    (test)))
 
 (deftest test-relu
   (let [activate      (relu
