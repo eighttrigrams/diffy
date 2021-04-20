@@ -12,16 +12,16 @@
       (:type (meta A)))))
 
 (defmulti outer-product 
-  (fn [v w]
-    [(:type (meta v)) (:type (meta w))]))
+  (fn [v _w]
+    (:type (meta v))))
 
 (defmulti transpose
   (fn [M]
     (:type (meta M))))
 
 (defmulti mmul
-  (fn [M v]
-    [(:type (meta M)) (:type (meta v))]))
+  (fn [M _v]
+    (:type (meta M))))
 
 (defmulti mul
   (fn [v _s]

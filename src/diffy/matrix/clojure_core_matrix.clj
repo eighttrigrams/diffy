@@ -16,13 +16,13 @@
 (defmethod m/to-clj :ccm
   [A] (matrix (-> A (use-if number? ccm/to-nested-vectors))))
 
-(defmethod m/outer-product [:ccm :ccm]
+(defmethod m/outer-product :ccm
   [v w] (matrix (ccm/outer-product v w)))
 
 (defmethod m/transpose :ccm
   [A] (matrix (ccm/transpose A)))
 
-(defmethod m/mmul [:ccm :ccm]
+(defmethod m/mmul :ccm
   [M v] (matrix (ccm/mmul M v)))
 
 (defmethod m/mul :ccm

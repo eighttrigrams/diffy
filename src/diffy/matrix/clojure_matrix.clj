@@ -32,7 +32,7 @@
   [A] 
   A)
 
-(defmethod m/outer-product [:cm :cm]
+(defmethod m/outer-product :cm
   [v w]
   (wrap-type (mapv #(mapv (partial * %1) %2) v (repeat w))))
 
@@ -40,7 +40,7 @@
   [A] 
   (wrap-type (apply map vector A)))
 
-(defmethod m/mmul [:cm :cm] 
+(defmethod m/mmul :cm
   [M v]
   (wrap-type (mapv #(reduce + (map * % v)) M)))
 
