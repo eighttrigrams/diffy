@@ -3,15 +3,17 @@
     [diffy.matrix.matrix :as m]
     [clojure.core.matrix :as ccm]))
 
-(defn- use-if [a f g] (if (f a) a (g a)))
+(defn- use-if
+  [a f g] (if (f a) a (g a)))
 
-(defn- wrap-type [A] (with-meta A {:type :ccm}))
+(defn- wrap-type
+  [A] (with-meta A {:type :ccm}))
 
-(defn matrix [A] (if (number? A)
-                   A
-                   (wrap-type A)))
+(defn matrix
+  [A] (if (number? A) A (wrap-type A)))
 
-(defn create [n-out n-in] (matrix (ccm/zero-matrix n-in n-out)))
+(defn create
+  [n-out n-in] (matrix (ccm/zero-matrix n-in n-out)))
 
 (defmethod m/to-clj :ccm
   [A] (matrix (-> A (use-if number? ccm/to-nested-vectors))))
