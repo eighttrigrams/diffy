@@ -7,14 +7,9 @@
             [diffy.net :as diffy]
             [diffy.matrix.matrix :as m]
             [diffy.matrix.clojure-matrix :as cm]
-            [diffy.matrix.clojure-core-matrix :as ccm]))
-;            [diffy.matrix.neander-matrix
-;             :refer  [impl]
-;             :rename {impl neander-matrix-impl}]
-            ;;[clojure.core.matrix :as ccm]
-            ;#_[diffy.matrix.clojure-core-matrix
-               ;:refer  [impl]
-              ;; :rename {impl clojure-core-matrix-impl}
+            [diffy.matrix.clojure-core-matrix :as ccm]
+            ; [diffy.matrix.neander-matrix :as nm]
+            ))
 
 (defonce create-impl (atom nil))
 
@@ -22,6 +17,7 @@
 
 (use-fixtures :each
   (fn [test]
+    ;; (reset! create-impl nm/create) (reset! matrix-impl nm/matrix)
     (reset! create-impl cm/create) (reset! matrix-impl cm/matrix)
     (test)
     (reset! create-impl ccm/create) (reset! matrix-impl ccm/matrix)
