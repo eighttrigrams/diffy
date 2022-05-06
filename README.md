@@ -24,11 +24,11 @@ fixture :each entries in `diffy_test.clj`.
 Get mnist_784_csv.csv from https://datahub.io/machine-learning/mnist_784
 
 
-    $ clj -m examples.mnist          
+    $ clj -M -m examples.mnist          
 
 Uses clojure.core.matrix. Neanderthal implementation can be enabled.
 
 ### Cartpole
 
-    $ clj -m examples.cartpole    ;; classic cartpole
+    $ clj -M -m examples.cartpole    ;; classic cartpole
 
