@@ -1,5 +1,7 @@
 # Diffy
   
+See also: [gym](https://github.com/eighttrigrams/gym)
+  
 Neural Network for Clojure
 
 * Dense layer with a single or multiple bias values
